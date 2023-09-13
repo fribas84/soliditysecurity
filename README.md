@@ -5,3 +5,8 @@ Vulnerable contract that anyone can modify a state variable, to fix it, it uses 
 
 To run test:
 `npx hardhat test test/AccessControl.js`
+
+## Sensitive Data
+Reading private variables from the SC memory
+To run test:
+`npx hardhat test test/SensitiveData.js`
