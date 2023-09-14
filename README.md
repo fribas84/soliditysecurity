@@ -10,3 +10,7 @@ To run test:
 Reading private variables from the SC memory
 To run test:
 `npx hardhat test test/SensitiveData.js`
+
+## Versions
+- Hardhat: 2.17.3
+- Ethers: 6.7.1
