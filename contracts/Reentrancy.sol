@@ -20,8 +20,8 @@ contract ReentrancyVulnerable {
         uint256 depositedAmount = balanceOf[msg.sender];
 
         console.log("");
-        console.log("ReentrancyVictim's balance: ", address(this).balance);
-        console.log("ReentrancyAttacker's balance: ", balanceOf[msg.sender]);
+        console.log("Contract balance: ", address(this).balance);
+        console.log("MSG.SENDER's balance: ", balanceOf[msg.sender]);
         console.log("");
 
         payable(msg.sender).sendValue(depositedAmount);
