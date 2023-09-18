@@ -1,5 +1,5 @@
 # Solidity Essential Security 
-Simple and essentials Solidity security projects
+Simple Solidity sercurity vulnerabilites to present at (Universidad Nacional de Cuyo - Cryptoeconomics course) [https://fce.uncuyo.edu.ar/cursos/item/diplomado-en-criptoeconomia]
 ## Access Control
 Vulnerable contract that anyone can modify a state variable, to fix it, it uses Open Zeppelin Ownable contract
 
