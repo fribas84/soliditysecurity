@@ -103,7 +103,7 @@ describe("Weak Randomess", function () {
 
       let targetTimeStamp = (await ethers.provider.getBlock("latest")).toJSON()
         .timestamp;
-
+    
       while (true) {
         const randomUint = (targetTimeStamp % 100) + 1;
         console.log("Creating timestamp: " + targetTimeStamp + " Current number: " + randomUint);
