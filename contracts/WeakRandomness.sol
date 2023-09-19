@@ -21,8 +21,8 @@ contract WeakRandomnessBet is Ownable {
         require(betsOpen, "Bets are closed");
         require(msg.value == 1 ether, "Bet must be 1 ether");
         require(
-            number >= 1 && number <= 10,
-            "Number must be between 1 and 10"
+            number >= 1 && number <= 100,
+            "Number must be between 1 and 100"
         );
         require(bets[msg.sender] == 0, "You already placed a bet");
 
@@ -36,13 +36,12 @@ contract WeakRandomnessBet is Ownable {
 
     function getRandomNumber() public view returns (uint8) {
         console.log("timestamp in contract:", block.timestamp);
-        return uint8(uint256(block.timestamp) % 10) + 1;
+        return uint8(uint256(block.timestamp) % 100) + 1;
     }
 
     function withdraw() external {
         require(!prizeClaimed, "Prize already claimed");
         require(bets[msg.sender] == winningNumber, "You didn't win");
-
         prizeClaimed = true;
         payable(msg.sender).sendValue(address(this).balance);
     }

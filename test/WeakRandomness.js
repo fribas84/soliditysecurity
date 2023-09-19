@@ -5,9 +5,9 @@ const {
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-const userBet = 5;
-const attackerBet = 7;
-const ownerBet = 2;
+const userBet = 50;
+const attackerBet = 15;
+const ownerBet = 89;
 describe("Weak Randomess", function () {
   async function deployFixture() {
     const [owner, user, attacker] = await ethers.getSigners();
@@ -44,9 +44,9 @@ describe("Weak Randomess", function () {
       ethers.parseEther("1")
     );
     await weakRandomnessBet.closeBets();
-    expect(await weakRandomnessBet.bets(user.address)).to.equal(5);
+    expect(await weakRandomnessBet.bets(user.address)).to.equal(userBet);
     const winningNumber = await weakRandomnessBet.winningNumber();
-    expect(winningNumber).to.be.lt(256);
+    expect(winningNumber).to.be.lt(101);
     console.log("Winning Number: ", winningNumber);
   });
   it("Only winner can call withdraw", async function () {
@@ -105,7 +105,8 @@ describe("Weak Randomess", function () {
         .timestamp;
 
       while (true) {
-        const randomUint = (targetTimeStamp % 10) + 1;
+        const randomUint = (targetTimeStamp % 100) + 1;
+        console.log("Creating timestamp: " + targetTimeStamp + " Current number: " + randomUint);
         if (randomUint == attackerBet) {
           console.log("Found next TimeStamp: " + targetTimeStamp);
           break;
