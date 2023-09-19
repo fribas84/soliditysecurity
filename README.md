@@ -25,6 +25,9 @@ To run test:
 `npx hardhat test test/WeakRandomness.js`
 ### Miner / Validator Attack
 a Miner / Validator can manipulate the EVM Timestamp to guess the number
+### Contract Attack
+Guessing the winning number from another contract.
+
 ## Versions
 - Hardhat: 2.17.3
 - Ethers: 6.7.1

